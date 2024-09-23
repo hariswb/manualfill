@@ -1,0 +1,28 @@
+{
+  "name": "manualfill",
+  "version": "1.0.0",
+  "description": "Save your answers to forms, search them for future similar questions. In short, smarter copy paste tool.",
+  "manifest_version": 3,
+  "author": "haris wirabrata",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Manual Fill",
+    "default_icon": {
+      "16": "logo-16.png",
+      "32": "logo-32.png",
+      "48": "logo-48.png",
+      "128": "logo-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "js": ["toolbar.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "background": {
+    "service_worker": "serviceWorker.js"
+
+  },
+  "permissions": ["activeTab", "scripting", "storage"]
+}

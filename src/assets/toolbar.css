@@ -1,0 +1,144 @@
+#toolbar {
+  display: block;
+  position: absolute;
+  background-color: #ffffff;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+  z-index: 9999999;
+  min-width: 15.625rem;
+  width: 20rem;
+  font-family: "Roboto", sans-serif;
+  top: 1.25rem;
+  left: 1.25rem;
+}
+
+#toolbar-save-button {
+  display: block;
+  margin-bottom: 2.5rem;
+  padding: 1rem;
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+#toolbar-save-button:hover {
+  background-color: #2980b9;
+}
+
+#toolbar-search-form {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+#toolbar-search-input {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+  width: 70%;
+  transition: border-color 0.3s ease;
+}
+
+#toolbar-search-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+#toolbar-search-button {
+  padding: 0.75rem 1rem;
+  background-color: #2ecc71;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease;
+  width: 30%;
+}
+
+#toolbar-search-button:hover {
+  background-color: #27ae60;
+}
+
+#toolbar-search-result {
+  list-style: none;
+  padding: 0;
+  max-height: 24rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  overflow-x: hidden;
+}
+
+#toolbar-search-result li {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+#toolbar-search-result li:last-child {
+  border-bottom: none;
+}
+
+#toolbar-search-result li:hover {
+  background-color: #f9f9f9;
+  border-radius: 0.5rem;
+}
+
+#toolbar-search-result p {
+  margin: 0.5rem 0;
+}
+
+#toolbar-search-result .label-text {
+  font-weight: 600;
+  color: #333333;
+}
+
+#toolbar-search-result .input-text {
+  display: -webkit-box;
+  max-width: inherit;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#toolbar-search-result .action-buttons {
+  margin-top: 0.75rem;
+}
+
+#toolbar-search-result button {
+  padding: 0.5rem 1rem;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.toolbar-search-result-fill {
+  background-color: #3498db;
+}
+
+.toolbar-search-result-fill:hover {
+  background-color: #2980b9;
+}
+
+.toolbar-search-result-remove {
+  background-color: #e74c3c;
+}
+
+.toolbar-search-result-remove:hover {
+  background-color: #c0392b;
+}
