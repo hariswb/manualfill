@@ -1,6 +1,8 @@
 # Manual Fill
 A chrome extension to save form input answers and use it for future use. 
 
+![Demo](./src/assets/manual-fill-demo.gif)
+
 # How to use?
 - Chrome extension's content script is running to detect user's click events in the host page.
 - When user click on a form input, a toolbar pops up few pixels away from it. 
