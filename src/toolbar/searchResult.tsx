@@ -3,16 +3,47 @@ import "../assets/toolbar.css";
 import { ISearchResult } from "./types";
 import { useToolbarStore } from "./store";
 
-const SearchResult = (
-  liId: string,
-  searchResult: ISearchResult,
-  focusedHostInputId: string,
-  removeInput: (labelContent: string) => void
-) => {
-  function handleFillToHostInput(e: MouseEvent<HTMLButtonElement>) {
-    if (!focusedHostInputId) return;
+const SearchResults = () => {
+  const removeInput = useToolbarStore((state) => state.removeInput);
+  const focusedHostInputId = useToolbarStore(
+    (state) => state.focusedHostInputId
+  );
+  const searchTerm = useToolbarStore((state) => state.searchTerm);
+  const searchResults = useToolbarStore((state) => state.searchResults);
+  const fetchSearchResults = useToolbarStore(
+    (state) => state.fetchSearchResults
+  );
+  return (
+    <>
+      <ul className="toolbar-search-result">
+        {searchResults.map((d: ISearchResult, index: number) => (
+          <SearchResult
+            liId={"search-result-" + index.toString()}
+            key={"search-result-" + index.toString()}
+            searchTerm={searchTerm}
+            searchResult={d}
+            focusedHostInputId={focusedHostInputId ? focusedHostInputId : ""}
+            removeInput={removeInput}
+            handleSearch={fetchSearchResults}
+          />
+        ))}
+      </ul>
+    </>
+  );
+};
 
-    const focusedHostInput = document.getElementById(focusedHostInputId);
+const SearchResult = (props: {
+  liId: string;
+  searchTerm: string;
+  searchResult: ISearchResult;
+  focusedHostInputId: string;
+  removeInput: (labelContent: string) => Promise<boolean>;
+  handleSearch: (searchTerm: string) => void;
+}) => {
+  function handleInsertToHostInput(e: MouseEvent<HTMLButtonElement>) {
+    if (!props.focusedHostInputId) return;
+
+    const focusedHostInput = document.getElementById(props.focusedHostInputId);
 
     if (
       !(
@@ -23,57 +54,42 @@ const SearchResult = (
     )
       return;
 
-    focusedHostInput.value = searchResult.inputContent;
+    focusedHostInput.value = props.searchResult.inputContent;
 
     focusedHostInput.dispatchEvent(new Event("input", { bubbles: true }));
     focusedHostInput.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
-  function handleRemove(e: MouseEvent<HTMLButtonElement>) {
-    removeInput(searchResult.labelContent);
+  async function handleRemove(e: MouseEvent<HTMLSpanElement>) {
+    const result = await props.removeInput(props.searchResult.labelContent);
+    if (!result) return;
+    props.handleSearch(props.searchTerm);
   }
 
   return (
-    <li id={liId} key={liId}>
-      <p className="label-text">{searchResult.labelContent}</p>
-      <p className="input-text">{searchResult.inputContent}</p>
+    <li id={props.liId}>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      />
+      <p className="text label-text">{props.searchResult.labelContent}</p>
+      <p className="text input-text">{props.searchResult.inputContent}</p>
       <div className="action-buttons">
         <button
-          className="toolbar-search-result-fill"
-          onClick={(e) => handleFillToHostInput(e)}
+          className="toolbar-search-result-insert"
+          onClick={(e) => handleInsertToHostInput(e)}
         >
-          Fill in form
+          Insert
         </button>
-        <button
-          className="toolbar-search-result-remove"
+
+        <span
+          className="material-symbols-outlined toolbar-search-result-remove"
           onClick={(e) => handleRemove(e)}
         >
-          Remove
-        </button>
+          delete
+        </span>
       </div>
     </li>
-  );
-};
-
-const SearchResults = () => {
-  const removeInput = useToolbarStore((state) => state.removeInput);
-  const focusedHostInputId = useToolbarStore(
-    (state) => state.focusedHostInputId
-  );
-  const searchResults = useToolbarStore((state) => state.searchResults);
-  return (
-    <>
-      <ul id="toolbar-search-result">
-        {searchResults.map((d: ISearchResult, index: number) =>
-          SearchResult(
-            "search-result-" + index.toString(),
-            d,
-            focusedHostInputId ? focusedHostInputId : "",
-            removeInput
-          )
-        )}
-      </ul>
-    </>
   );
 };
 

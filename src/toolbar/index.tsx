@@ -1,9 +1,20 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import Toolbar from "./toolbar";
+import Pin from "./pin";
 import { useToolbarStore } from "./store";
+import "../assets/toolbar.css";
+import Controller from "./controller";
 
 var focusedInputHostId: string | null = null;
+
+function ManualFill(){
+  const isDisplayed = useToolbarStore((state)=>state.isDisplayed)
+  return <>
+    {isDisplayed?<Toolbar/>:<Controller/>}
+    <Pin/>
+  </>
+}
 
 document.addEventListener("click", (e: Event) => {
   // Open toolbar when focusing in host's input
@@ -39,17 +50,15 @@ document.addEventListener("click", (e: Event) => {
   if (!e.target || e.target instanceof Element === false) return;
   const eventTarget: Element = e.target;
 
-  const toolbar: HTMLElement | null = document.getElementById("toolbar");
+  const manualFill: HTMLElement | null = document.querySelector("manualfill");
 
-  if (!toolbar) return;
-
-  if (toolbar.contains(eventTarget)) return;
+  if (!manualFill) return;
+  if (manualFill.contains(eventTarget)) return;
 
   if (!focusedInputHostId) return;
   const focusedInputHost: HTMLElement | null =
     document.getElementById(focusedInputHostId);
   if (!focusedInputHost) return;
-
   if (focusedInputHost.contains(e.target)) return;
 
   useToolbarStore.getState().updateFocusedHostInputId(null);
@@ -58,4 +67,4 @@ document.addEventListener("click", (e: Event) => {
 const container: HTMLElement = document.createElement("manualfill");
 document.documentElement.appendChild(container);
 const root = createRoot(container);
-root.render(<Toolbar />);
+root.render(<ManualFill />);

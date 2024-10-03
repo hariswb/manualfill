@@ -3,9 +3,9 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
-  entry: { 
-    toolbar: path.resolve("src/toolbar/index.tsx"), 
-    serviceWorker: path.resolve("src/background/serviceWorker.ts")
+  entry: {
+    toolbar: path.resolve("src/toolbar/index.tsx"),
+    serviceWorker: path.resolve("src/background/serviceWorker.ts"),
   },
   devtool: "inline-source-map",
   module: {

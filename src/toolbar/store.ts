@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { ISearchResult } from "./types";
 
 type StateToolbar = {
+  isDisplayed: boolean;
   focusedHostInputId: string | null;
-  savedInput: string | null;
-  removedInput: string | null;
+  searchTerm: string;
   searchResults: ISearchResult[];
 };
 
@@ -12,19 +12,25 @@ type ActionToolbar = {
   updateFocusedHostInputId: (
     focusedHostInputId: StateToolbar["focusedHostInputId"]
   ) => void;
+  updateSearchTerm: (searchTerm: string) => void;
   fetchSearchResults: (searchTerm: string) => void;
-  saveInput: (labelContent: string, inputContent: string) => void;
-  cleanupSavedInput: ()=> void;
-  removeInput: (labelContent: string) => void;
-  cleanupRemovedInput: ()=> void;
+  saveInput: (labelContent: string, inputContent: string) => Promise<boolean>;
+  removeInput: (labelContent: string) => Promise<boolean>;
+  updateIsDisplayed: (isDisplayed: boolean) => void;
 };
 
 export const useToolbarStore = create<StateToolbar & ActionToolbar>((set) => ({
+  isDisplayed: true,
+  updateIsDisplayed: (isDisplayed) => set({ isDisplayed: isDisplayed }),
   focusedHostInputId: null,
   savedInput: null,
   removedInput: null,
+  searchTerm: "",
   searchResults: [],
   updateFocusedHostInputId: (id) => set(() => ({ focusedHostInputId: id })),
+  updateSearchTerm: (searchTerm) => {
+    set({ searchTerm: searchTerm });
+  },
   fetchSearchResults: async (searchTerm) => {
     const searchResults = await chrome.runtime.sendMessage({
       ops: "SEARCH",
@@ -51,12 +57,11 @@ export const useToolbarStore = create<StateToolbar & ActionToolbar>((set) => ({
     });
 
     if (saved && saved.data && saved.data) {
-      return set({ savedInput: saved.data });
+      return true;
     }
 
-    return set({ savedInput: null });
+    return false;
   },
-  cleanupSavedInput: ()=>set(()=>({savedInput:null})),
   removeInput: async (labelContent) => {
     const deleted = await chrome.runtime.sendMessage({
       ops: "DELETE",
@@ -64,9 +69,8 @@ export const useToolbarStore = create<StateToolbar & ActionToolbar>((set) => ({
     });
 
     if (deleted && deleted.data) {
-      return set({ removedInput: deleted.data });
+      return true;
     }
-    return set({ removedInput: null });
+    return false;
   },
-  cleanupRemovedInput: ()=>set(()=>({removedInput:null})),
 }));
