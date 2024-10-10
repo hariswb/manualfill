@@ -28,8 +28,8 @@ export default function Controller() {
   useLayoutEffect(() => {
     function updateSize() {
       setControllerPos({
-        x: window.innerWidth - 100,
-        y: window.innerHeight - 50,
+        x: window.innerWidth - 120,
+        y: window.innerHeight - 80,
       });
     }
     window.addEventListener("resize", updateSize);
@@ -39,7 +39,7 @@ export default function Controller() {
 
   return (
     <div
-      className="controller"
+      className="controller prevent-select"
       style={{
         left: `${controllerPos.x}px`,
         top: `${controllerPos.y}px`,

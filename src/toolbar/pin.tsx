@@ -35,19 +35,21 @@ export default function Pin() {
     const inputViewPortOffset = focusedHostInput.getBoundingClientRect();
 
     // pin position relative to host document
-    const pinPos = inputViewPortOffset.top - inputViewPortOffset.height + window.scrollY;
+    const margin = 16;
 
-    const top = pinPos;
+    const top = inputViewPortOffset.top + window.scrollY;
+
     const left =
       inputViewPortOffset.left +
       inputViewPortOffset.width +
-      window.scrollX;
+      window.scrollX +
+      margin;
 
     setPinPos({ x: left, y: top });
     setPinDisplay(true);
   }, [focusedHostInputId]);
 
-  function handleSaveInput(event: MouseEvent<HTMLElement>) {
+  async function handleSaveInput(event: MouseEvent<HTMLElement>) {
     event.preventDefault();
 
     const focusedHostInput = getFocusedHostInput(focusedHostInputId);
@@ -55,13 +57,14 @@ export default function Pin() {
     const inputContent = focusedHostInput?.value;
 
     if (!inputContent || !labelContent) return;
-    if (!saveInput(labelContent, inputContent)) return;
+    const isSaved = await saveInput(labelContent, inputContent)
+    if (!isSaved) return;
     fetchSearchResults(searchTerm);
   }
 
   return (
     <div
-      className="pin"
+      className="pin prevent-select"
       style={{
         left: `${pinPos.x}px`,
         top: `${pinPos.y}px`,
@@ -73,9 +76,9 @@ export default function Pin() {
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
       />
 
-    <div className="save-button" onClick={(e) => handleSaveInput(e)}>
-      <span className="material-symbols-outlined">bookmark</span>
-    </div>
+      <div className="save-button" onClick={(e) => handleSaveInput(e)}>
+        <span className="material-symbols-outlined">bookmark</span>
+      </div>
     </div>
   );
 }

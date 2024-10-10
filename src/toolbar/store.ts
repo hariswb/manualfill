@@ -20,7 +20,7 @@ type ActionToolbar = {
 };
 
 export const useToolbarStore = create<StateToolbar & ActionToolbar>((set) => ({
-  isDisplayed: true,
+  isDisplayed: false,
   updateIsDisplayed: (isDisplayed) => set({ isDisplayed: isDisplayed }),
   focusedHostInputId: null,
   savedInput: null,

@@ -3,8 +3,6 @@ import React, {
   useEffect,
   MouseEvent,
   useRef,
-  ReactSVGElement,
-  ReactElement,
 } from "react";
 import SearchResults from "./searchResult";
 import DebouncedSearchBar from "./debouncedSearchBar";
@@ -47,11 +45,36 @@ export default function Toolbar() {
     fetchSearchResults(searchTerm);
   }, [searchTerm]);
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return;
-    const newX = e.clientX - dragStart.x;
-    const newY = e.clientY - dragStart.y;
-    setPos({ x: newX, y: newY });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      setPos({ x: newX, y: newY });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove as any);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove as any);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setDragStart({
+      x: e.clientX - pos.x,
+      y: e.clientY - pos.y,
+    });
+    setIsDragging(true);
   };
 
   return (
@@ -65,16 +88,8 @@ export default function Toolbar() {
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
       />
       <div
-        className="header"
-        onMouseDown={(e) => {
-          setDragStart({
-            x: e.clientX - pos.x,
-            y: e.clientY - pos.y,
-          });
-          setIsDragging(true);
-        }}
-        onMouseUp={() => setIsDragging(false)}
-        onMouseMove={(e) => handleMouseMove(e)}
+        className="header prevent-select"
+        onMouseDown={handleMouseDown}
       >
         <div className="logo-actions">
           <Logo />

@@ -24,7 +24,7 @@ export default function Logo() {
         height={logoSize.height}
         viewBox="0 0 330 330"
         // fill="white"
-        fill="#007bff"
+        fill="#ff6347"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
